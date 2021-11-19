@@ -251,7 +251,7 @@ std::optional<Item> BoardRepository::getItem(int columnId, int itemId) {
     int answer = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
     handleSQLError(answer, errorMessage);
 
-    if (answer != SQLITE_OK) {
+    if (answer != SQLITE_OK || items.size() == 0) {
         return nullopt;
     }
     return items[0];
