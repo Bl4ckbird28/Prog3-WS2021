@@ -231,10 +231,10 @@ std::vector<Item> BoardRepository::getItems(int columnId) {
     vector<Item> items;
     vector<Item> *pitems = &items;
 
-    int resultItem = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
-    handleSQLError(resultItem, errorMessage);
+    int answer = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
+    handleSQLError(answer, errorMessage);
 
-    if (resultItem != SQLITE_OK) {
+    if (answer != SQLITE_OK) {
         vector<Item> emptyVector;
         return emptyVector;
     }
@@ -242,16 +242,16 @@ std::vector<Item> BoardRepository::getItems(int columnId) {
 }
 
 std::optional<Item> BoardRepository::getItem(int columnId, int itemId) {
-    string itemSqlSelect = "SELECT * FROM item WHERE column_id=" + to_string(columnId) + "AND id=" + to_string(itemId) + ";";
+    string itemSqlSelect = "SELECT * FROM item WHERE column_id=" + to_string(columnId) + " AND id=" + to_string(itemId) + ";";
 
     char *errorMessage = nullptr;
     vector<Item> items;
     vector<Item> *pitems = &items;
 
-    int resultItem = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
-    handleSQLError(resultItem, errorMessage);
+    int answer = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
+    handleSQLError(answer, errorMessage);
 
-    if (resultItem != SQLITE_OK) {
+    if (answer != SQLITE_OK) {
         return nullopt;
     }
     return items[0];
