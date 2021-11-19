@@ -224,13 +224,10 @@ void BoardRepository::deleteColumn(int id) {
 }
 
 std::vector<Item> BoardRepository::getItems(int columnId) {
-
     string itemSqlSelect = "SELECT * FROM item WHERE column_id=" + to_string(columnId) + ";";
-
     char *errorMessage = nullptr;
     vector<Item> items;
     vector<Item> *pitems = &items;
-
     int answer = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
     handleSQLError(answer, errorMessage);
 

@@ -22,6 +22,27 @@ string JsonParser::convertToApiString(Column &column) {
     return jsonValueToString(jsonColumn);
 }
 
+string JsonParser::convertToApiString(std::vector<Column> &columns) {
+    throw NotImplementedException();
+}
+
+string JsonParser::convertToApiString(Item &item) {
+    string result = EMPTY_JSON;
+    Document document(kObjectType);
+
+    Value jsonItem = getJsonValueFromModel(item, document.GetAllocator());
+    result = jsonValueToString(jsonItem);
+    return result;
+}
+
+string JsonParser::convertToApiString(std::vector<Item> &items) {
+    string result = EMPTY_JSON;
+    Document document(kObjectType);
+    Value jsonItem = getJsonValueFromModels(items, document.GetAllocator());
+    result = jsonValueToString(jsonItem);
+    return result;
+}
+
 rapidjson::Value JsonParser::getJsonValueFromModel(Column const &column, rapidjson::Document::AllocatorType &allocator) {
     Value jsonColumn(kObjectType);
 
@@ -41,9 +62,18 @@ rapidjson::Value JsonParser::getJsonValueFromModel(Column const &column, rapidjs
     return jsonColumn;
 }
 
+rapidjson::Value JsonParser::getJsonValueFromModels(vector<Item> const &items, rapidjson::Document::AllocatorType &allocator) {
+    Value jsonItems(kArrayType);
+
+    for (Item const &item : items) {
+        Value jsonItem = getJsonValueFromModel(item, allocator);
+        jsonItems.PushBack(jsonItem, allocator);
+    }
+    return jsonItems;
+}
+
 rapidjson::Value JsonParser::getJsonValueFromModel(Item const &item, rapidjson::Document::AllocatorType &allocator) {
     Value jsonItem(kObjectType);
-
     jsonItem.AddMember("id", item.getId(), allocator);
     jsonItem.AddMember("title", Value(item.getTitle().c_str(), allocator), allocator);
     jsonItem.AddMember("position", item.getPos(), allocator);
@@ -60,24 +90,7 @@ string JsonParser::jsonValueToString(rapidjson::Value const &json) {
     return buffer.GetString();
 }
 
-string JsonParser::convertToApiString(std::vector<Column> &columns) {
-    throw NotImplementedException();
-}
-
-string JsonParser::convertToApiString(Item &item) {
-    string result = EMPTY_JSON;
-    Document document(kObjectType);
-
-    Value jsonItem = getJsonValueFromModel(item, document.GetAllocator());
-    result = jsonValueToString(jsonItem);
-    return result;
-}
-
-string JsonParser::convertToApiString(std::vector<Item> &items) {
-    throw NotImplementedException();
-}
-
-std::optional<Column> JsonParser::convertColumnToModel(int columnId, std::string &request) { //Aufgabe 1
+std::optional<Column> JsonParser::convertColumnToModel(int columnId, std::string &request) {
     std::optional<Column> resultColumn;
     Document document;
     document.Parse(request.c_str());
@@ -88,20 +101,6 @@ std::optional<Column> JsonParser::convertColumnToModel(int columnId, std::string
         resultColumn = Column(columnId, name, position);
     }
     return resultColumn;
-}
-
-std::optional<Item> JsonParser::convertItemToModel(int itemId, std::string &request) {
-    std::optional<Item> resultItem;
-
-    Document document;
-    document.Parse(request.c_str());
-
-    if (true == isValidItem(document)) {
-        std::string title = document["title"].GetString();
-        int position = document["position"].GetInt();
-        resultItem = Item(itemId, title, position, "");
-    }
-    return resultItem;
 }
 
 bool JsonParser::isValidColumn(rapidjson::Document const &document) {
@@ -119,6 +118,20 @@ bool JsonParser::isValidColumn(rapidjson::Document const &document) {
     }
 
     return isValid;
+}
+
+std::optional<Item> JsonParser::convertItemToModel(int itemId, std::string &request) {
+    std::optional<Item> resultItem;
+
+    Document document;
+    document.Parse(request.c_str());
+
+    if (true == isValidItem(document)) {
+        std::string title = document["title"].GetString();
+        int position = document["position"].GetInt();
+        resultItem = Item(itemId, title, position, "");
+    }
+    return resultItem;
 }
 
 bool JsonParser::isValidItem(rapidjson::Document const &document) {
