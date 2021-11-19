@@ -1,0 +1,41 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build Hello",
+			"command": "/usr/bin/g++",
+			"args": [
+				"Hello.cpp",
+				"-o",
+				"${workspaceFolder}/Hello"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",x
+				"isDefault": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Run Hello",
+			"command": "${workspaceFolder}/Hello",
+			"args": [],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Open Terminal",
+			"type": "shell",
+			"command": "osascript -e 'tell application \"Terminal\"\ndo script \"echo hello\"\nend tell'",
+			"problemMatcher": []
+		  }
+	]
+}

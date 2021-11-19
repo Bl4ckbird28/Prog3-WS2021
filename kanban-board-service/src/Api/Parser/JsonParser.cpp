@@ -77,7 +77,7 @@ string JsonParser::convertToApiString(std::vector<Item> &items) {
     throw NotImplementedException();
 }
 
-std::optional<Column> JsonParser::convertColumnToModel(int columnId, std::string &request) {
+std::optional<Column> JsonParser::convertColumnToModel(int columnId, std::string &request) { //Aufgabe 1
     std::optional<Column> resultColumn;
     Document document;
     document.Parse(request.c_str());
