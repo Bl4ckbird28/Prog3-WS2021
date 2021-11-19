@@ -100,12 +100,12 @@ std::optional<Column> BoardRepository::getColumn(int id) {
     handleSQLError(resultItem, errorMessage);
     */
 
-    for (auto item : items) {
-        column.addItem(item);
-    }
-
     if (result != SQLITE_OK || column.getId() == -1) {
         return nullopt;
+    }
+
+    for (auto item : items) {
+        column.addItem(item);
     }
 
     return column;
