@@ -413,14 +413,6 @@ int BoardRepository::getItemCallback(void *data, int numberOfColumns, char **fie
     string date = values[2];
     int position = std::stoi(values[3]);
 
-    // Das funktioniert nur, wenn kein nullptr uebergeben wird
-    /*
-    pitems->setID(id);
-    pitems->setTitle(title);
-    pitems->setPos(position);
-    pitems->setTimestamp(date);
-    */
-
     Item tmp(id, title, position, date);
     pitems->push_back(tmp);
 
