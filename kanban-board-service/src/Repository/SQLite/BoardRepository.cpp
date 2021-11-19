@@ -230,7 +230,19 @@ std::vector<Item> BoardRepository::getItems(int columnId) {
 }
 
 std::optional<Item> BoardRepository::getItem(int columnId, int itemId) {
-    throw NotImplementedException();
+    string itemSqlSelect = "SELECT * FROM item WHERE column_id=" + to_string(columnId) + "AND id=" + to_string(itemId) + ";";
+
+    char *errorMessage = nullptr;
+    vector<Item> items;
+    vector<Item> *pitems = &items;
+
+    int resultItem = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
+    handleSQLError(resultItem, errorMessage);
+
+    if (resultItem != SQLITE_OK) {
+        return nullopt;
+    }
+    return items[0];
 }
 
 std::optional<Item> BoardRepository::postItem(int columnId, std::string title, int position) {
