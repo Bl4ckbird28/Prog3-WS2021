@@ -83,15 +83,28 @@ std::optional<Column> BoardRepository::getColumn(int id) {
 
     char *errorMessage = nullptr;
     // das erstellen von "column" wird zum reservieren vom Speicherplatz benötigt
-    Column column(0, "", 0);
+    Column column(-1, "", 0);
     Column *pcolumn = &column;
     //void *selectResult = static_cast<void *>(&pcolumn);   // scheint nicht gebraucht zu werden -> bringt Probleme und Fehlermeldungen
 
+    // string itemSqlSelect = "SELECT * FROM item WHERE column_id=" + to_string(id) + ";";
+    vector<Item> items = getItems(id);
+    vector<Item> *pitems = &items;
+
     int result = sqlite3_exec(database, sqlSelect.c_str(), BoardRepository::getColumnCallback, pcolumn, &errorMessage);
     handleSQLError(result, errorMessage);
-    errorMessage = nullptr;
 
-    if (result != SQLITE_OK) {
+    /*
+    errorMessage = nullptr;
+    int resultItem = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
+    handleSQLError(resultItem, errorMessage);
+    */
+
+    for (auto item : items) {
+        column.addItem(item);
+    }
+
+    if (result != SQLITE_OK || column.getId() == -1) {
         return nullopt;
     }
 
@@ -226,7 +239,6 @@ std::vector<Item> BoardRepository::getItems(int columnId) {
         return emptyVector;
     }
     return items;
-    throw NotImplementedException();
 }
 
 std::optional<Item> BoardRepository::getItem(int columnId, int itemId) {
