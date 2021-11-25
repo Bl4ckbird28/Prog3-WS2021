@@ -71,7 +71,9 @@ void BoardRepository::initialize() {
 }
 
 Board BoardRepository::getBoard() {
-    throw NotImplementedException();
+    Board board("Kanban Board");
+    board.setColumns(getColumns());
+    return board;
 }
 
 std::vector<Column> BoardRepository::getColumns() {
