@@ -75,7 +75,28 @@ Board BoardRepository::getBoard() {
 }
 
 std::vector<Column> BoardRepository::getColumns() {
-    throw NotImplementedException();
+    string itemSqlSelect = "SELECT id FROM column;";
+    char *errorMessage = nullptr;
+    vector<int> ids;
+    vector<int> *pids = &ids;
+    int answer = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getIdCallback, pids, &errorMessage);
+    handleSQLError(answer, errorMessage);
+
+    if (answer != SQLITE_OK) {
+        vector<Column> emptyVector;
+        return emptyVector;
+    }
+
+    vector<Column> columns;
+
+    for (auto id : ids) {
+        optional<Column> temp = getColumn(id);
+        if (temp.has_value()) {
+            columns.push_back(temp.value());
+        }
+    }
+
+    return columns;
 }
 
 std::optional<Column> BoardRepository::getColumn(int id) {
@@ -85,20 +106,12 @@ std::optional<Column> BoardRepository::getColumn(int id) {
     // das erstellen von "column" wird zum reservieren vom Speicherplatz benötigt
     Column column(-1, "", 0);
     Column *pcolumn = &column;
-    //void *selectResult = static_cast<void *>(&pcolumn);   // scheint nicht gebraucht zu werden -> bringt Probleme und Fehlermeldungen
 
-    // string itemSqlSelect = "SELECT * FROM item WHERE column_id=" + to_string(id) + ";";
     vector<Item> items = getItems(id);
     vector<Item> *pitems = &items;
 
     int result = sqlite3_exec(database, sqlSelect.c_str(), BoardRepository::getColumnCallback, pcolumn, &errorMessage);
     handleSQLError(result, errorMessage);
-
-    /*
-    errorMessage = nullptr;
-    int resultItem = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getItemCallback, pitems, &errorMessage);
-    handleSQLError(resultItem, errorMessage);
-    */
 
     if (result != SQLITE_OK || column.getId() == -1) {
         return nullopt;
@@ -416,5 +429,14 @@ int BoardRepository::getItemCallback(void *data, int numberOfColumns, char **fie
     Item tmp(id, title, position, date);
     pitems->push_back(tmp);
 
+    return 0;
+}
+
+int BoardRepository::getIdCallback(void *data, int numberOfColumns, char **fieldValues, char **columnNames) {
+    if (numberOfColumns == 0) {
+        return 0;
+    }
+    vector<int> *ids = static_cast<vector<int> *>(data);
+    ids->push_back(atoi(fieldValues[0]));
     return 0;
 }
