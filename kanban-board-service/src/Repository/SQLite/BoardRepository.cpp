@@ -71,17 +71,17 @@ void BoardRepository::initialize() {
 }
 
 Board BoardRepository::getBoard() {
-    Board board("Kanban Board");
+    Board board(boardTitle);
     board.setColumns(getColumns());
     return board;
 }
 
 std::vector<Column> BoardRepository::getColumns() {
-    string itemSqlSelect = "SELECT id FROM column;";
+    string columnSqlSelect = "SELECT id FROM column;";
     char *errorMessage = nullptr;
     vector<int> ids;
     vector<int> *pids = &ids;
-    int answer = sqlite3_exec(database, itemSqlSelect.c_str(), BoardRepository::getIdCallback, pids, &errorMessage);
+    int answer = sqlite3_exec(database, columnSqlSelect.c_str(), BoardRepository::getIdCallback, pids, &errorMessage);
     handleSQLError(answer, errorMessage);
 
     if (answer != SQLITE_OK) {
