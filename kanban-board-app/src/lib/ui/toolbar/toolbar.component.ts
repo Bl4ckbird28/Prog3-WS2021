@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class ToolbarComponent {
   @Input()
-  title = 'My Board';
+  title = 'Bio Town';
 }
