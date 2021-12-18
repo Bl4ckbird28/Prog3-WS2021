@@ -52,24 +52,39 @@ export class BoardComponent {
       ],
     },
 
-    {
-      id: 2,
-      name: 'done',
-      position: 2,
-      items: [
-        {
-          id: 0,
-          title: 'first task',
-          position: 0,
-          timestamp: '2021-12-09T10:04:42.058Z',
-        },
-        {
-          id: 1,
-          title: 'second task',
-          position: 1,
-          timestamp: '2021-12-09T10:04:42.058Z',
-        },
-      ],
-    },
+    // {
+    //   id: 2,
+    //   name: 'done',
+    //   position: 2,
+    //   items: [
+    //     {
+    //       id: 0,
+    //       title: 'first task',
+    //       position: 0,
+    //       timestamp: '2021-12-09T10:04:42.058Z',
+    //     },
+    //     {
+    //       id: 1,
+    //       title: 'second task',
+    //       position: 1,
+    //       timestamp: '2021-12-09T10:04:42.058Z',
+    //     },
+    //   ],
+    // },
   ];
+
+  addEmptyColumn() {
+    this.columns.push({
+      id: (Math.random() * 10000) | 0,
+      name: 'Empty',
+      position: 0,
+      items: [],
+    });
+  }
+
+  deleteColumn(column) {
+    var index = this.columns.indexOf(column);
+    this.columns.splice(index, 1);
+  }
+
 }
