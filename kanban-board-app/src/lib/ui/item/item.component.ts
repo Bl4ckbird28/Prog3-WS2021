@@ -10,23 +10,32 @@ export class ItemComponent {
   title = 'item'; // title: string = "item";
 
   @Input()
-  id = 'item';
+  idItem = 'item';
 
   @Output()
-  delteItemEvent = new EventEmitter<number>();
-  deleteItem(id: number) {
-    this.delteItemEvent.emit(id);
-    console.log('delete buttion pressed on Item id: ' + id);
-  }
-
-  showDeleteButton = false;
+  deleteItemEvent = new EventEmitter();
 
   @Output()
   onTitleChange = new EventEmitter<string>();  // onTitleChange : EventEmitter<string>    wäre die Zuweisung des Datentyps
 
+  showDeleteButton = false;
+
+  deleteItem() {
+    this.deleteItemEvent.emit();
+  }
 
   onChange(event) {
-    this.title = event.target.value;
+    this.onTitleChange.emit(event.target.value);
+  }
+
+  ngAfterViewInit() {
+    let element = document.getElementById("item" + this.idItem.toString())
+
+    if(element != null) {
+      element.focus();
+    } else {
+      console.log("Couldnt find Item of id: " + this.idItem.toString());
+    }
   }
 
 }

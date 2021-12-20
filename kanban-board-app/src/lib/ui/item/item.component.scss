@@ -54,3 +54,16 @@
   color: rgb(254, 254, 254);
   margin-right: 5px;
 }
+
+.delete-icon:hover {
+  --red: #f31c00;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 17px rgba(red, 0.288);
+  background-color: rgb(red, 0.14);
+}
+
+.inputItem {
+  border-width: 0px;
+  border: none;
+  background-color: transparent;
+}

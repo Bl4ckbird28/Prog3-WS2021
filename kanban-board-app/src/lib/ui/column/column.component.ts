@@ -11,12 +11,18 @@ export class ColumnComponent {
   title = 'column';
 
   @Input()
-  id: number;
+  idColumn: number;
 
   @Input()
   items: ItemModel[];
 
-  @Output() deleteColumnEvent = new EventEmitter<number>();
+  @Output()
+  deleteColumnEvent = new EventEmitter();
+
+  @Output()
+  onChangeColumnTitle = new EventEmitter<string>();
+
+    showDeleteButton: boolean = false;
 
   deleteColumn() {
     this.deleteColumnEvent.emit();
@@ -31,16 +37,28 @@ export class ColumnComponent {
     });
   }
 
-  deleteItem(id: number) {
-    this.items = this.items.filter(element => element.id != id);
+  deleteItem(item:ItemModel) {
+    var index = this.items.indexOf(item);
+    this.items.splice(index, 1);   // nehm ab stelle "index" 1 Element raus
   }
 
-  showDeleteButton: boolean = false;
-
   changeItemName(item, event) {
-    console.log(item);
     item.title = event;
-    console.log(event);
+    // console.log(item);
+  }
+
+  onChange(event) {
+    this.onChangeColumnTitle.emit(event.target.value);
+  }
+
+  ngAfterViewInit() {
+    let element = document.getElementById("column" + this.idColumn.toString())
+
+    if(element != null) {
+      element.focus();
+    } else {
+      console.log("Couldnt find Column of id: " + this.idColumn.toString());
+    }
   }
 
 }

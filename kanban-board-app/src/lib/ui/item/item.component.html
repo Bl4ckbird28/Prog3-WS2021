@@ -1,5 +1,5 @@
 <div class="card" (mouseover)="showDeleteButton = true" (mouseleave)="showDeleteButton = false">
   <!-- {{title}} -->
-  <input [value]="title" (change)="onChange($event)"/>
-  <img *ngIf="showDeleteButton" (click)="deleteColumn(id)" class="delete-icon" src="../../../assets/trash-button.svg"/>
+  <input class="inputItem" [id]="'item' + idItem.toString()" [value]="title" (change)="onChange($event)"/>
+  <img *ngIf="showDeleteButton" (click)="deleteItem()" class="delete-icon" src="assets/trash-button.svg"/>
 </div>
